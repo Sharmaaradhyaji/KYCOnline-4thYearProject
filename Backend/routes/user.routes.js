@@ -24,7 +24,7 @@ userRouter.post(
 );
 
 userRouter.post(
-    '/logout', logoutUser
+  '/logout', logoutUser
 )
 
 export default userRouter;

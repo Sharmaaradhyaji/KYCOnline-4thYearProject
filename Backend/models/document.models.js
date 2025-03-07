@@ -1,17 +1,29 @@
 import mongoose from "mongoose";
 
-const documentSchema = new mongoose.Schema({
-    name: {
+const DocSchema = new mongoose.Schema({
+    documentImage: {
         type: String,
-        required: true,
     },
-    type: {
-        type: Sele,
-        required: true,
-    },
-    image: {
+    selfieLive: {
         type: String,
-        required: true,
+    },
+    fatherName: {
+        type: String,
+    },
+    phoneNumber: {
+        type: String,
+    },
+    address: {
+        type: String,
+    },
+    email: {
+        type: String,
+    },
+    age: {
+        type: String,
     },
 });
 
+const Document = mongoose.model("Document", DocSchema);
+
+export default Document;

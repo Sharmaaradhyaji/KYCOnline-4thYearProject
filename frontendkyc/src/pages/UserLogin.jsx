@@ -25,10 +25,13 @@ const LoginPage = () => {
       setUser(data.user)
       localStorage.setItem('token', data.token)
       navigate('/home') 
-    }
-
+      
     setEmail('');
     setPassword('');
+    }
+    else{
+      alert("Try again. Wrong Credentials.")
+    }
   };
 
   return (
@@ -70,7 +73,7 @@ const LoginPage = () => {
           </button>
         </form>
         <p className="text-gray-600 text-xs italic mt-4">
-          Don't have an account? <Link className='text-blue-500' to="/signup">Signup here</Link>
+          Don't have an account? <Link className='text-blue-500' to="/register">Signup here</Link>
         </p>
       </div>
     </div>

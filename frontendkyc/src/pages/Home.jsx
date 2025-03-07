@@ -1,5 +1,6 @@
 import React, { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import axios from "axios";
 
 const HomePage = () => {
   const [kycStatus, setKycStatus] = useState("Not Updated");
@@ -7,9 +8,10 @@ const HomePage = () => {
   const [documentImage, setDocumentImage] = useState(null);
   const [uploadStatus, setUploadStatus] = useState("");
 
+  const navigate = useNavigate();
+
   const handleKYCUpdate = () => {
-    // TODO: Call API to update KYC status
-    setKycStatus("Updated");
+    navigate("/kyc-details");
   };
 
   const handleDocumentTypeChange = (e) => {
@@ -20,9 +22,32 @@ const HomePage = () => {
     setDocumentImage(e.target.files[0]);
   };
 
-  const handleUploadDocument = () => {
-    // TODO: Call API to upload document image
-    setUploadStatus("Uploaded successfully");
+  const handleUploadDocument = async () => {
+    if (!documentImage || !documentType) {
+      alert("Please select a document type and upload an image.");
+      return;
+    }
+
+    try {
+      // Upload document
+      const formData = new FormData();
+      formData.append("file", documentImage);
+
+      const uploadResponse = await axios.post(
+        "http://localhost:3000/api/uploadDocument",
+        formData
+      );
+
+      if (!uploadResponse.data.success) {
+        alert("File upload failed: " + uploadResponse.data.message);
+        return;
+      }
+    } catch (error) {
+      console.error("Error uploading document:", error);
+      alert("File upload failed: " + error.message);
+      return;
+    }
+    navigate("/selfie-upload");
   };
 
   return (
@@ -52,7 +77,7 @@ const HomePage = () => {
 
         {/* Document Upload Section */}
         <div className="p-4 rounded-lg shadow-md border bg-gray-50">
-          <h2 className="text-lg font-bold text-gray-900 mb-2">Upload Document:</h2>
+          <h2 className="text-lg font-bold text-gray-900 mb-2">Upload Document & Start KYC</h2>
           <select
             className="block w-full bg-white border border-gray-300 px-4 py-3 rounded-lg shadow-sm focus:ring focus:ring-blue-300 outline-none transition"
             value={documentType}
@@ -64,11 +89,7 @@ const HomePage = () => {
           </select>
 
           <label className="block w-full mt-4 cursor-pointer border-2 border-dashed border-gray-400 hover:border-blue-500 rounded-lg p-6 text-gray-500 text-center transition">
-            <input
-              type="file"
-              className="hidden"
-              onChange={handleDocumentImageChange}
-            />
+            <input type="file" onChange={handleDocumentImageChange} />
             {documentImage ? (
               <span className="text-gray-800">{documentImage.name}</span>
             ) : (
@@ -82,9 +103,7 @@ const HomePage = () => {
           >
             Upload Document
           </button>
-          {uploadStatus && (
-            <p className="text-green-500 font-medium mt-2">{uploadStatus}</p>
-          )}
+          {uploadStatus && <p className="text-green-500 font-medium mt-2">{uploadStatus}</p>}
         </div>
 
         {/* Navigation */}

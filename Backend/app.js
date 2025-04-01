@@ -4,7 +4,7 @@ import cors from "cors";
 import connectDB from "./db/db.js";
 import userRouter from "./routes/user.routes.js";
 import cookieParser from "cookie-parser";
-import documentrouter from "./routes/documentRoutes.routes.js";
+import kycRouter from "./routes/kyc.routes.js";
 
 dotenv.config();
 
@@ -22,6 +22,6 @@ app.get("/", (req, res) => {
 });
 
 app.use('/users', userRouter);
-app.use('/api', documentrouter)
+app.use('/kyc', kycRouter);
 
 export default app;

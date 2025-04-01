@@ -4,9 +4,8 @@ import UserLogin from './pages/UserLogin'
 import UserSignup from './pages/UserSignup'
 import Start from './pages/Start'
 import Home from './pages/Home'
-import TakeSelfie from './pages/TakeSelfie'
-import AdditionalDetails from './pages/AdditionalDetails'
 import KYCPage from './pages/KYCPage'
+import Details from './pages/Details'
 
 const App = () => {
   return (
@@ -18,11 +17,8 @@ const App = () => {
         <Route path='/home' element={
           <Home />
         } />
-        <Route path='/selfie-upload' element={
-          <TakeSelfie />
-        } />
-        <Route path='/additional-details' element={
-          <AdditionalDetails />
+        <Route path='/details' element={
+          <Details />
         }
         />
         <Route path='/kyc-details' element={

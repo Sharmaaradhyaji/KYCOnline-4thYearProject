@@ -1,54 +1,15 @@
 import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import axios from "axios";
 
 const HomePage = () => {
   const [kycStatus, setKycStatus] = useState("Not Updated");
-  const [documentType, setDocumentType] = useState("");
-  const [documentImage, setDocumentImage] = useState(null);
-  const [uploadStatus, setUploadStatus] = useState("");
 
   const navigate = useNavigate();
 
   const handleKYCUpdate = () => {
-    navigate("/kyc-details");
+    navigate("/details");
   };
 
-  const handleDocumentTypeChange = (e) => {
-    setDocumentType(e.target.value);
-  };
-
-  const handleDocumentImageChange = (e) => {
-    setDocumentImage(e.target.files[0]);
-  };
-
-  const handleUploadDocument = async () => {
-    if (!documentImage || !documentType) {
-      alert("Please select a document type and upload an image.");
-      return;
-    }
-
-    try {
-      // Upload document
-      const formData = new FormData();
-      formData.append("file", documentImage);
-
-      const uploadResponse = await axios.post(
-        "http://localhost:3000/api/uploadDocument",
-        formData
-      );
-
-      if (!uploadResponse.data.success) {
-        alert("File upload failed: " + uploadResponse.data.message);
-        return;
-      }
-    } catch (error) {
-      console.error("Error uploading document:", error);
-      alert("File upload failed: " + error.message);
-      return;
-    }
-    navigate("/selfie-upload");
-  };
 
   return (
     <div className="h-screen flex items-center justify-center bg-gradient-to-r from-gray-50 to-gray-200 px-6">
@@ -74,38 +35,7 @@ const HomePage = () => {
             </button>
           )}
         </div>
-
-        {/* Document Upload Section */}
-        <div className="p-4 rounded-lg shadow-md border bg-gray-50">
-          <h2 className="text-lg font-bold text-gray-900 mb-2">Upload Document & Start KYC</h2>
-          <select
-            className="block w-full bg-white border border-gray-300 px-4 py-3 rounded-lg shadow-sm focus:ring focus:ring-blue-300 outline-none transition"
-            value={documentType}
-            onChange={handleDocumentTypeChange}
-          >
-            <option value="">Select document type</option>
-            <option value="PAN Card">PAN Card</option>
-            <option value="DL">Driving License</option>
-          </select>
-
-          <label className="block w-full mt-4 cursor-pointer border-2 border-dashed border-gray-400 hover:border-blue-500 rounded-lg p-6 text-gray-500 text-center transition">
-            <input type="file" onChange={handleDocumentImageChange} />
-            {documentImage ? (
-              <span className="text-gray-800">{documentImage.name}</span>
-            ) : (
-              "Click to upload document"
-            )}
-          </label>
-
-          <button
-            className="mt-4 w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold py-3 px-6 rounded-lg transition-all duration-300 transform hover:scale-105 shadow-md"
-            onClick={handleUploadDocument}
-          >
-            Upload Document
-          </button>
-          {uploadStatus && <p className="text-green-500 font-medium mt-2">{uploadStatus}</p>}
-        </div>
-
+        
         {/* Navigation */}
         <div className="mt-6">
           <p className="text-gray-600">

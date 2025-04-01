@@ -1,7 +1,6 @@
 import { validationResult } from "express-validator";
 import User from "../models/user.models.js";
 import { createUser } from "../services/user.services.js";
-import multer from "multer";
 
 export const registerUser = async (req, res) => {
   try {

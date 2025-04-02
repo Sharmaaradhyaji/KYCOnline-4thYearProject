@@ -5,12 +5,15 @@ import connectDB from "./db/db.js";
 import userRouter from "./routes/user.routes.js";
 import cookieParser from "cookie-parser";
 import kycRouter from "./routes/kyc.routes.js";
+import connectCloudinary from "./config/cloudinary.js";
 
 dotenv.config();
 
 connectDB();
 
 const app = express();
+
+connectCloudinary();
 
 app.use(cors());
 app.use(express.json());

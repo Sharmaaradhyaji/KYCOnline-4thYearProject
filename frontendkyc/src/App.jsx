@@ -21,7 +21,7 @@ const App = () => {
           <Details />
         }
         />
-        <Route path='/kyc-details' element={
+        <Route path='/kyc-details/:id' element={
           <KYCPage />
         }
         />

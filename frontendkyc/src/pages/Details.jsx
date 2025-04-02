@@ -87,16 +87,11 @@ const Details = () => {
       const response = await axios.post(
         "http://localhost:3000/kyc/add-details",
         formData,
-        {
-          headers: {
-            "Content-Type": "multipart/form-data",
-          },
-        }
       );
 
       if (response.data.message === "KYC details added successfully") {
         alert("Form submitted successfully!");
-        navigate(`/kyc-details`);
+        navigate(`/kyc-details/${response.data.kycId}`);
       } else {
         alert("Submission failed: " + response.data.message);
       }

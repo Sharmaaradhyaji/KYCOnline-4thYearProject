@@ -6,6 +6,7 @@ import Start from './pages/Start'
 import Home from './pages/Home'
 import KYCPage from './pages/KYCPage'
 import Details from './pages/Details'
+import ImageCheck from './pages/ImageCheck'
 
 const App = () => {
   return (
@@ -23,6 +24,10 @@ const App = () => {
         />
         <Route path='/kyc-details/:id' element={
           <KYCPage />
+        }
+        />
+        <Route path='/kyc-image/:id' element={
+          <ImageCheck />
         }
         />
       </Routes>

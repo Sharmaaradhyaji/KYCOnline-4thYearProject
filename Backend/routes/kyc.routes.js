@@ -1,5 +1,5 @@
 import { Router } from "express";
-import { addDetails, getDetails } from "../controllers/kyc.controllers.js";
+import { addDetails, compareImages, getDetails } from "../controllers/kyc.controllers.js";
 import upload from "../middleware/multer.js";
 
 const kycRouter = Router();
@@ -13,5 +13,7 @@ kycRouter.post("/add-details",
     ,addDetails);
 
 kycRouter.get("/get-details/:id", getDetails);
+
+kycRouter.get("/compare-images/:id", compareImages);
 
 export default kycRouter;

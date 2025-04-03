@@ -125,7 +125,7 @@ const KycDetails = () => {
   };
 
   const handleNextClick = () => {
-    
+    navigate(`/kyc-image/${id}`);
   };
 
   const isAllVerified = verificationStatus.firstName && verificationStatus.lastName && verificationStatus.panNumber && verificationStatus.aadhaarNumber;

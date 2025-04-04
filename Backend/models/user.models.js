@@ -29,10 +29,11 @@ const userSchema = new mongoose.Schema(
         // updatedAt:{
         //     type: Date,
         // },
-        // kycStatus: {
-        //     type: String,
-        //     enum: [notStarted, inProgress, underReview, approved, rejected],
-        // },
+        kycStatus: {
+            type: String,
+            enum: ["KYC Completed", "KYC Pending", "KYC Not Started"],
+            default: "KYC Not Started",
+        },
     },
     {timestamps: true}
 );

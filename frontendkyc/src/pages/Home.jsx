@@ -1,7 +1,9 @@
-import React, { useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import React, { use, useEffect, useState } from "react";
+import { data, Link, useNavigate, useParams } from "react-router-dom";
+import axios from "axios";
 
 const HomePage = () => {
+  const {id} = useParams();
   const [kycStatus, setKycStatus] = useState("Not Updated");
 
   const navigate = useNavigate();
@@ -10,6 +12,23 @@ const HomePage = () => {
     navigate("/details");
   };
 
+  useEffect(() => {
+    const fetchUserData = async () => {
+      try {
+        const response = await axios.get(`http://localhost:3000/users/get-details/${id}`);
+        if (response.status) {
+          const data = response.data;
+          setKycStatus(data.kycStatus);
+        } else {
+          console.error("Error fetching user data:", response.data);
+        }
+      } catch (error) {
+        console.error("Error fetching user data:", error);
+      }
+    };
+
+    fetchUserData();
+  }, [id])
 
   return (
     <div className="h-screen flex items-center justify-center bg-gradient-to-r from-gray-50 to-gray-200 px-6">
@@ -21,12 +40,12 @@ const HomePage = () => {
           <h2 className="text-lg font-bold text-gray-900">KYC Status:</h2>
           <p
             className={`text-lg font-semibold mt-2 ${
-              kycStatus === "Not Updated" ? "text-red-500" : "text-green-500"
+              kycStatus === "KYC Not Started" ? "text-red-500" : "text-green-500"
             }`}
           >
             {kycStatus}
           </p>
-          {kycStatus === "Not Updated" && (
+          {(kycStatus === "KYC Not Started" || kycStatus === "KYC Pending") && (
             <button
               className="mt-3 w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold py-3 px-6 rounded-lg transition-all duration-300 transform hover:scale-105 shadow-md"
               onClick={handleKYCUpdate}
@@ -39,9 +58,9 @@ const HomePage = () => {
         {/* Navigation */}
         <div className="mt-6">
           <p className="text-gray-600">
-            Want to check your KYC details?{" "}
-            <Link to="/profile/kyc-details" className="text-blue-600 font-semibold hover:underline">
-              View Details
+            Want to learn the Process?{" "}
+            <Link to="/process" className="text-blue-600 font-semibold hover:underline">
+              About KYC Process
             </Link>
           </p>
         </div>

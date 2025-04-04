@@ -48,12 +48,18 @@ const ImageCheck = () => {
   };
 
   const endKycBlock = async () => {
+    const response = await axios.put(`http://localhost:3000/kyc/kyc-end/${id}`);
+    if (response.status === 200) {
+      console.log('KYC process ended successfully!');
+    } else {
+      console.error('Error ending KYC process:', response.data);
+    }
     alert('KYC process ended!');
-    navigate('/home');
+    navigate(`/home/${id}`);  
   }
 
   const tryAgainBlock = async () => {
-    navigate('/details');
+    navigate(`/details-again/${id}`);
   }
 
   if (loading) return <div className="text-center text-xl text-gray-500">Loading...</div>;
@@ -78,7 +84,7 @@ const ImageCheck = () => {
             <div className="mt-6 p-4 bg-gray-100 rounded-lg shadow-inner">
               <p className="text-xl text-gray-700">Match Score: {matchScore}</p>
 
-              {matchScore > 0.7 ? (
+              {matchScore >= 0.9 ? (
                 <div className="mt-4 flex items-center justify-center text-green-500 font-semibold text-2xl">
                   <span className="mr-2">✔</span> Matched!
                 </div>
@@ -89,7 +95,7 @@ const ImageCheck = () => {
               )}
 
               {/* Success/Failure Block */}
-              {matchScore >= 0.7 ? (
+              {matchScore >= 0.9 ? (
                 <div className="mt-6 p-6 bg-green-50 rounded-xl shadow-xl">
                   <p className="text-green-600 font-medium text-xl">You are verified as a User!</p>
                   <button onClick={endKycBlock} className="mt-4 bg-green-500 text-white px-6 py-3 rounded-full hover:bg-green-600 focus:outline-none transition duration-300 ease-in-out transform hover:scale-105">

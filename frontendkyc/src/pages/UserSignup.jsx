@@ -50,7 +50,7 @@ const SignupPage = () => {
         const data = response.data;
         setUser(data.user)
         localStorage.setItem('token', data.token)
-        navigate('/home')
+        navigate(`/home/${data.user._id}`)
     }
     } catch (error) {
       console.error('Error registering user:', error);

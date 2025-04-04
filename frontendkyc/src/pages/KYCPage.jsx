@@ -131,7 +131,7 @@ const KycDetails = () => {
   const isAllVerified = verificationStatus.firstName && verificationStatus.lastName && verificationStatus.panNumber && verificationStatus.aadhaarNumber;
 
   const handleBackClick = () => {
-    navigate(-1);  // Go back to the previous page
+    navigate(`/details-again/${id}`);  // Go back to the previous page
   };
 
   if (!kycData) return <div className="text-center text-gray-500 mt-10">Loading...</div>;

@@ -7,6 +7,8 @@ import Home from './pages/Home'
 import KYCPage from './pages/KYCPage'
 import Details from './pages/Details'
 import ImageCheck from './pages/ImageCheck'
+import DetailsAgain from './pages/DetailsAgain'
+import Process from './pages/Process'
 
 const App = () => {
   return (
@@ -15,11 +17,19 @@ const App = () => {
         <Route path="/" element={<Start />} />
         <Route path="/register" element={<UserSignup />} />
         <Route path="/login" element={<UserLogin />} />
-        <Route path='/home' element={
+        <Route path='/home/:id' element={
           <Home />
         } />
+        <Route path='/process' element={
+          <Process />
+        }
+        />
         <Route path='/details' element={
           <Details />
+        }
+        />
+        <Route path='/details-again/:id' element={
+          <DetailsAgain />
         }
         />
         <Route path='/kyc-details/:id' element={

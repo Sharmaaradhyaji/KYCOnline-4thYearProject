@@ -1,6 +1,7 @@
 import { validationResult } from "express-validator";
 import User from "../models/user.models.js";
 import { createUser } from "../services/user.services.js";
+import Kyc from "../models/kyc.models.js";
 
 export const registerUser = async (req, res) => {
   try {
@@ -71,4 +72,26 @@ export const logoutUser = async (req, res) => {
   const token = req.cookies.token || req.headers.authorization.split(' ')[1];
   
   res.status(200).json({ message: "Logout successful" });
+};
+
+export const getUserDetails = async (req, res) => {
+  try {
+    const userId = req.params.id;
+    const Kycuser = await Kyc.findById(userId);
+    if (!Kycuser) {
+      return res.status(404).json({ message: "User not found in kyc" });
+    }
+
+    const email = Kycuser.email;
+
+    const user = await User.findOne({ email });
+    if (!user) {
+      return res.status(404).json({ message: "User not found in users" });
+    }
+
+    res.status(200).json(user);
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({ message: "Something went wrong" });
+  }
 };

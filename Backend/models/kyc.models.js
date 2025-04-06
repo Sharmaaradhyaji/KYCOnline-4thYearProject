@@ -14,6 +14,7 @@ const kycSchema = new mongoose.Schema({
   panImage: { type: String, required: true },
   adhaarImage: { type: String, required: true },
   selfieImage: { type: String, required: true },
+  signature: {type: String, required: true}
 });
 
 const Kyc = mongoose.model("Kyc", kycSchema);

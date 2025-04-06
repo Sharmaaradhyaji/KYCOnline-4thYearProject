@@ -1,6 +1,6 @@
 import { Router } from "express";
 import { body } from "express-validator";
-import { getUserDetails, loginUser, logoutUser, registerUser } from "../controllers/user.controllers.js";
+import { getUserDetails, loginUser, logoutUser, registerUser, sendOtp, verifyOtp } from "../controllers/user.controllers.js";
 
 const userRouter = Router();
 
@@ -30,5 +30,9 @@ userRouter.post(
 userRouter.get(
   '/get-details/:id', getUserDetails
 )
+
+userRouter.post('/request-otp', sendOtp);
+
+userRouter.post('/verify-otp', verifyOtp);
 
 export default userRouter;

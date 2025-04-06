@@ -8,7 +8,8 @@ kycRouter.post("/add-details",
     upload.fields([
       { name: 'panImage', maxCount: 1 },
       { name: 'adhaarImage', maxCount: 1 },
-      { name: 'selfieImage', maxCount: 1 }
+      { name: 'selfieImage', maxCount: 1 },
+      { name: 'signature', maxCount: 1}
     ])
     ,addDetails);
 
@@ -18,7 +19,8 @@ kycRouter.put('/update-details/:id',
     upload.fields([
       { name: 'panImage', maxCount: 1 },
       { name: 'adhaarImage', maxCount: 1 },
-      { name: 'selfieImage', maxCount: 1 }
+      { name: 'selfieImage', maxCount: 1 },
+      { name: 'signature', maxCount: 1 }
     ])
     , updateDetails);
 

@@ -14,9 +14,10 @@ const addDetails = async (req, res) => {
     const panImage = req.files.panImage && req.files.panImage[0].path;
     const adhaarImage = req.files.adhaarImage && req.files.adhaarImage[0].path;
     const selfieImage = req.files.selfieImage && req.files.selfieImage[0].path;
+    const signature = req.files.signature && req.files.signature[0].path;
 
     // Check for valid images
-    if (!panImage || !adhaarImage || !selfieImage) {
+    if (!panImage || !adhaarImage || !selfieImage || !signature) {
       return res.status(400).json({ message: 'Please upload all required images (PAN, Aadhaar, Selfie)' });
     }
 
@@ -33,10 +34,14 @@ const addDetails = async (req, res) => {
       resource_type: "image",
     });
 
+    let signatureUrl = await cloudinary.uploader.upload(signature, {
+      resource_type: "image",
+    });
+
     // Create KYC document
     const kyc = new Kyc({
       fatherName, firstName, lastName, phoneNumber, address, email, age, panNumber,
-      adhaarNumber, gender, panImage: panImageUrl.url, adhaarImage: adhaarImageUrl.url, selfieImage: selfieImageUrl.url
+      adhaarNumber, gender, panImage: panImageUrl.url, adhaarImage: adhaarImageUrl.url, selfieImage: selfieImageUrl.url, signature: signatureUrl.url
     });
 
     // Save to database
@@ -60,10 +65,11 @@ const updateDetails = async (req, res) => {
     const panImage = req.files.panImage && req.files.panImage[0].path;
     const adhaarImage = req.files.adhaarImage && req.files.adhaarImage[0].path;
     const selfieImage = req.files.selfieImage && req.files.selfieImage[0].path;
+    const signature = req.files.signature && req.files.signature[0].path;
 
     // Check for valid images
-    if (!panImage || !adhaarImage || !selfieImage) {
-      return res.status(400).json({ message: 'Please upload all required images (PAN, Aadhaar, Selfie)' });
+    if (!panImage || !adhaarImage || !selfieImage || !signature) {
+      return res.status(400).json({ message: 'Please upload all required images' });
     }
     // Upload to Cloudinary
     let panImageUrl = await cloudinary.uploader.upload(panImage, {
@@ -75,18 +81,22 @@ const updateDetails = async (req, res) => {
     let selfieImageUrl = await cloudinary.uploader.upload(selfieImage, {
       resource_type: "image",
     });
+    let signatureUrl = await cloudinary.uploader.upload(signature, {
+      resource_type: "image",
+    });
 
     // Find and update KYC document
     const kyc = await Kyc.findByIdAndUpdate(kycId, {
       fatherName, firstName, lastName, phoneNumber, address, email, age, panNumber,
-      adhaarNumber, gender, panImage: panImageUrl.url, adhaarImage: adhaarImageUrl.url, selfieImage: selfieImageUrl.url
-    }, { new: true });
+      adhaarNumber, gender, panImage: panImageUrl.url, adhaarImage: adhaarImageUrl.url, selfieImage: selfieImageUrl.url, signature: signatureUrl.url
+    });
 
     if (!kyc) {
       return res.status(404).json({ message: 'KYC details not found' });
     }
 
     res.status(200).json({ message: 'KYC details updated successfully', kyc });
+
   } catch (error) {
     console.log(error);
     res.status(500).json({ message: 'Something went wrong' });

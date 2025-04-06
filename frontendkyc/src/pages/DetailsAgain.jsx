@@ -18,6 +18,9 @@ const DetailsAgain = () => {
   const [panImage, setPanImage] = useState(null);
   const [adhaarImage, setAdhaarImage] = useState(null);
   const [selfieImage, setSelfieImage] = useState(null);
+  const [signature, setSignature] = useState(null);
+
+  const [kycData, setKycData] = useState(null); 
 
   const videoRef = useRef(null); // Reference for the video element
   const canvasRef = useRef(null); // Reference for the canvas element
@@ -82,6 +85,7 @@ const DetailsAgain = () => {
     if (panImage) formData.append("panImage", panImage);
     if (adhaarImage) formData.append("adhaarImage", adhaarImage);
     if (selfieImage) formData.append("selfieImage", selfieImage);
+    if (signature) formData.append("signature", signature);
 
 
     try {
@@ -90,11 +94,12 @@ const DetailsAgain = () => {
         formData,
       );
 
-      if (response.data.message === "KYC details added successfully") {
+      if(response.status === 200){
         alert("Form submitted successfully!");
-        navigate(`/kyc-details/${response.data.kycId}`);
-      } else {
-        alert("Submission failed: " + response.data.message);
+        navigate(`/kyc-details/${id}`);
+      }
+      else{
+        alert("Error submitting form: " + response.data.message);
       }
     } catch (error) {
       console.error("Error submitting form:", error);
@@ -122,7 +127,6 @@ const DetailsAgain = () => {
             else{
                 console.log("Error fetching data", error);
             }
-            setKycData(response.data);
         } catch (error) {
             console.log("Error fetching data caught", error);
         }
@@ -356,6 +360,20 @@ const DetailsAgain = () => {
             />
             {panImage && (
               <p className="mt-2 text-sm text-gray-500">{panImage.name}</p>
+            )}
+          </div>
+
+          <div>
+            <label className="block text-sm font-medium text-gray-700">
+              Upload Signature
+            </label>
+            <input
+              type="file"
+              onChange={(e) => setSignature(e.target.files[0])}
+              className="mt-2 p-2 border rounded-lg w-full"
+            />
+            {signature && (
+              <p className="mt-2 text-sm text-gray-500">{signature.name}</p>
             )}
           </div>
         </div>

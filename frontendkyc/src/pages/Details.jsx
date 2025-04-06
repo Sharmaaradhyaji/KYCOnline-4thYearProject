@@ -13,10 +13,13 @@ const Details = () => {
   const [panNumber, setPanNumber] = useState("");
   const [adhaarNumber, setAdhaarNumber] = useState("");
   const [gender, setGender] = useState("");
-
+  
   const [panImage, setPanImage] = useState(null);
   const [adhaarImage, setAdhaarImage] = useState(null);
   const [selfieImage, setSelfieImage] = useState(null);
+  const [signature, setSignature] = useState(null)
+
+  const [loading, setLoading] = useState(false);
 
   const videoRef = useRef(null); // Reference for the video element
   const canvasRef = useRef(null); // Reference for the canvas element
@@ -65,7 +68,7 @@ const Details = () => {
   // Handle form submission
   const handleSubmit = async (event) => {
     event.preventDefault();
-
+    setLoading(true);
     const formData = new FormData();
     formData.append("fatherName", fatherName);
     formData.append("firstName", firstName);
@@ -81,6 +84,7 @@ const Details = () => {
     if (panImage) formData.append("panImage", panImage);
     if (adhaarImage) formData.append("adhaarImage", adhaarImage);
     if (selfieImage) formData.append("selfieImage", selfieImage);
+    if (signature) formData.append("signature", signature);
 
 
     try {
@@ -98,6 +102,9 @@ const Details = () => {
     } catch (error) {
       console.error("Error submitting form:", error);
       alert("Error submitting form: " + error.message);
+    }
+    finally{
+      setLoading(false);
     }
   };
 
@@ -328,6 +335,20 @@ const Details = () => {
               <p className="mt-2 text-sm text-gray-500">{panImage.name}</p>
             )}
           </div>
+
+          <div>
+            <label className="block text-sm font-medium text-gray-700">
+              Upload Signature
+            </label>
+            <input
+              type="file"
+              onChange={(e) => setSignature(e.target.files[0])}
+              className="mt-2 p-2 border rounded-lg w-full"
+            />
+            {signature && (
+              <p className="mt-2 text-sm text-gray-500">{signature.name}</p>
+            )}
+          </div>
         </div>
 
         {/* Selfie Capture */}
@@ -362,12 +383,16 @@ const Details = () => {
           )}
         </div>
 
-        {/* Submit Button */}
         <button
           type="submit"
-          className="w-full bg-green-600 text-white py-3 rounded-lg hover:bg-green-700 transition duration-300"
+          disabled={loading} 
+          className={`w-full py-2 px-4 bg-blue-500 text-white font-semibold rounded-lg focus:outline-none ${loading ? "bg-gray-500 cursor-not-allowed" : ""}`}
         >
-          Submit
+          {loading ? (
+            <span>Submitting...</span>
+          ) : (
+            <span>Submit</span>
+          )}
         </button>
       </form>
     </div>

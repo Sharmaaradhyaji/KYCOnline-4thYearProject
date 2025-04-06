@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import axios from 'axios';
 import Tesseract from 'tesseract.js';
-import { FaCheckCircle } from 'react-icons/fa';
+import { FaCheckCircle, FaSpinner } from 'react-icons/fa'; // Added spinner icon
 
 const KycDetails = () => {
   const { id } = useParams();
@@ -14,6 +14,7 @@ const KycDetails = () => {
     panNumber: false,
     aadhaarNumber: false,
   });
+  const [loading, setLoading] = useState(false); // Added loading state
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -31,32 +32,33 @@ const KycDetails = () => {
 
   const handleOcrVerification = () => {
     let combinedText = ''; // To combine text from both PAN and Aadhaar images
+    setLoading(true); // Set loading to true when OCR starts
 
-    if (kycData?.panImage) {
-      Tesseract.recognize(
-        kycData.panImage, 
-        'eng',
-        {
-          logger: (m) => console.log(m),
-        }
-      ).then(({ data: { text } }) => {
-        combinedText += text.toLowerCase(); // Append PAN image OCR text
-        setOcrText(combinedText); // Set the combined text
+    const processImage = (image, textCallback) => {
+      return new Promise((resolve) => {
+        Tesseract.recognize(
+          image, 
+          'eng',
+          {
+            logger: (m) => console.log(m),
+          }
+        ).then(({ data: { text } }) => {
+          textCallback(text); // Callback to update OCR text
+          resolve();
+        });
       });
-    }
+    };
 
-    if (kycData?.adhaarImage) {
-      Tesseract.recognize(
-        kycData.adhaarImage, 
-        'eng',
-        {
-          logger: (m) => console.log(m),
-        }
-      ).then(({ data: { text } }) => {
-        combinedText += text.toLowerCase(); // Append Aadhaar image OCR text
-        setOcrText(combinedText); // Update the combined OCR text
-      });
-    }
+    // Process PAN and Aadhaar images
+    const panPromise = kycData?.panImage ? processImage(kycData.panImage, (text) => { combinedText += text.toLowerCase(); }) : Promise.resolve();
+    const adhaarPromise = kycData?.adhaarImage ? processImage(kycData.adhaarImage, (text) => { combinedText += text.toLowerCase(); }) : Promise.resolve();
+
+    // Once both are processed, set the OCR text and stop the loading animation
+    Promise.all([panPromise, adhaarPromise]).then(() => {
+      setOcrText(combinedText); // Set the combined OCR text
+      setLoading(false); // Set loading to false once OCR is done
+      alert('OCR Extraction Complete!'); // Alert user once OCR is done
+    });
   };
 
   const verifyFirstName = () => {
@@ -155,6 +157,7 @@ const KycDetails = () => {
         <img src={kycData.panImage} alt="PAN Image" className="w-full h-auto rounded-lg shadow-md" />
         <img src={kycData.adhaarImage} alt="Aadhaar Image" className="w-full h-auto rounded-lg shadow-md" />
         <img src={kycData.selfieImage} alt="Selfie Image" className="w-full h-auto rounded-lg shadow-md" />
+        <img src={kycData.signature} alt="Signature" className="w-full h-auto rounded-lg shadow-md" />
       </div>
 
       <div className="mb-6">
@@ -162,9 +165,15 @@ const KycDetails = () => {
           onClick={handleOcrVerification}
           className="px-6 py-3 bg-yellow-500 text-white font-semibold rounded-lg shadow-md hover:bg-yellow-600 transition duration-300 w-full"
         >
-          Extract OCR Text
+          {loading ? (
+            <div className="flex justify-center items-center space-x-2">
+              <FaSpinner className="animate-spin text-white" />
+              <span>Extracting OCR...</span>
+            </div>
+          ) : (
+            'Extract OCR Text'
+          )}
         </button>
-        {ocrText && <p className="text-center text-lg text-gray-700 mt-4">{ocrText}</p>}
       </div>
 
       <div className="space-y-4">

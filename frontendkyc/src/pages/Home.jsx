@@ -45,7 +45,7 @@ const HomePage = () => {
           >
             {kycStatus}
           </p>
-          {(kycStatus === "KYC Not Started" || kycStatus === "KYC Pending") && (
+          { (
             <button
               className="mt-3 w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold py-3 px-6 rounded-lg transition-all duration-300 transform hover:scale-105 shadow-md"
               onClick={handleKYCUpdate}

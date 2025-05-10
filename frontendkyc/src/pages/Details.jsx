@@ -14,12 +14,13 @@ const Details = () => {
   const [adhaarNumber, setAdhaarNumber] = useState("");
   const [gender, setGender] = useState("");
   
+  const [isSubmitting, setIsSubmitting] = useState(false);
+
   const [panImage, setPanImage] = useState(null);
   const [adhaarImage, setAdhaarImage] = useState(null);
   const [selfieImage, setSelfieImage] = useState(null);
   const [signature, setSignature] = useState(null)
 
-  const [loading, setLoading] = useState(false);
 
   const videoRef = useRef(null); // Reference for the video element
   const canvasRef = useRef(null); // Reference for the canvas element
@@ -68,7 +69,14 @@ const Details = () => {
   // Handle form submission
   const handleSubmit = async (event) => {
     event.preventDefault();
-    setLoading(true);
+
+    setIsSubmitting(true);
+
+    if(age < 18) {
+      alert("You must be at least 18 years old to submit KYC details.");
+      return;
+    }
+
     const formData = new FormData();
     formData.append("fatherName", fatherName);
     formData.append("firstName", firstName);
@@ -102,9 +110,8 @@ const Details = () => {
     } catch (error) {
       console.error("Error submitting form:", error);
       alert("Error submitting form: " + error.message);
-    }
-    finally{
-      setLoading(false);
+    } finally {
+      setIsSubmitting(false);
     }
   };
 
@@ -384,16 +391,14 @@ const Details = () => {
         </div>
 
         <button
-          type="submit"
-          disabled={loading} 
-          className={`w-full py-2 px-4 bg-blue-500 text-white font-semibold rounded-lg focus:outline-none ${loading ? "bg-gray-500 cursor-not-allowed" : ""}`}
-        >
-          {loading ? (
-            <span>Submitting...</span>
-          ) : (
-            <span>Submit</span>
-          )}
-        </button>
+  type="submit"
+  disabled={isSubmitting}
+  className={`w-full py-2 px-4 font-semibold rounded-lg focus:outline-none 
+    ${isSubmitting ? 'bg-gray-400 cursor-not-allowed' : 'bg-blue-500 hover:bg-blue-600 text-white'}`}
+>
+  {isSubmitting ? "Submitting..." : "Submit"}
+</button>
+
       </form>
     </div>
   );

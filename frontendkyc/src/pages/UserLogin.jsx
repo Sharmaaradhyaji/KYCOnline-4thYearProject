@@ -10,29 +10,36 @@ const LoginPage = () => {
   const navigate = useNavigate()
 
   const {user, setUser} = useContext(UserDataContext);
-  const handleSubmit = async(e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-
+  
     const userData = {
       email: email,
       password: password,
     };
-
-    const response = await axios.post('http://localhost:3000/users/login', userData);
-
-    if (response.status === 200) {
-      const data = response.data;
-      setUser(data.user)
-      localStorage.setItem('token', data.token)
-      navigate(`/home/${data.user._id}`) 
-      
-    setEmail('');
-    setPassword('');
-    }
-    else{
-      alert("Try again. Wrong Credentials.")
+  
+    try {
+      const response = await axios.post('http://localhost:3000/users/login', userData);
+  
+      if (response.status === 200) {
+        const data = response.data;
+        setUser(data.user);
+        localStorage.setItem('token', data.token);
+        navigate(`/home/${data.user._id}`);
+  
+        setEmail('');
+        setPassword('');
+      }
+    } catch (error) {
+      if (error.response && error.response.status === 401) {
+        alert("Try again. Wrong Credentials.");
+      } else {
+        alert("An error occurred. Please try again later.");
+        console.error(error);
+      }
     }
   };
+  
 
   return (
     <div className="h-screen flex items-center justify-center bg-gray-100">

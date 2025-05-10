@@ -40,7 +40,7 @@ const HomePage = () => {
           <h2 className="text-lg font-bold text-gray-900">KYC Status:</h2>
           <p
             className={`text-lg font-semibold mt-2 ${
-              kycStatus === "KYC Not Started" ? "text-red-500" : "text-green-500"
+              kycStatus === "Not Updated" ? "text-red-500" : "text-green-500"
             }`}
           >
             {kycStatus}
